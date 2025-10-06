@@ -3,14 +3,20 @@ import nodemailer from 'nodemailer'
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
+  service: 'gmail',
+  secure:false,
   auth: {
     user: process.env.GMAIL_USERNAME,
     pass: process.env.GMAIL_PASSWORD,
   },
+  connectionTimeout: 5 * 60 * 1000, // 5 minutes
+  greetingTimeout: 30 * 1000, // 30 seconds
+  socketTimeout: 60 * 1000, // 1 minute
 })
 
 const emailService = {
   sendPasswordResetEmail: async (email: string, resetCode: string) => {
+    console.log("DEBUG: Sending email to", email);
     await transporter.sendMail({
       from: process.env.GMAIL_USERNAME,
       to: email,
