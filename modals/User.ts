@@ -24,7 +24,7 @@ const UserSchema = new Schema<UserProps>({
   otp: { type: String },
   otp_expiry: { type: Date },
   created: {
-    type: String,
+    type: Date,
     default: Date.now(),
   },
 })
