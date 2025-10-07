@@ -17,6 +17,10 @@ const UserSchema = new Schema<UserProps>({
     type: String,
     required: true,
   },
+  username: {
+    type: String,
+    unique: true,
+  },
   avatar: {
     type: String,
     default: '',

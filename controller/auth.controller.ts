@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs'
 import type { Request, Response } from 'express'
 import User from '../modals/User.js'
 import { generateToken } from '../utils/token.js'
-
+import { z } from 'zod'
 const AuthController = {
   //register controller
   register: async (req: Request, res: Response): Promise<void> => {
@@ -47,10 +47,18 @@ const AuthController = {
   //login controller
   login: async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body
+
     try {
-      //find user by email
-      const user = await User.findOne({ email })
+      let user
+      const checkEmail = z.string().email().safeParse(email)
+
+      //find user by email or username
+      user = checkEmail.success
+        ? await User.findOne({ email })
+        : await User.findOne({ username: email })
+
       if (!user) {
+        console.log(user);
         res.status(400).json({ success: false, msg: 'Invalid credentials' })
         return
       }

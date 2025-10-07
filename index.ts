@@ -26,9 +26,9 @@ initSocket(server) // socket
 
 connectDB()
   .then(() => {
-    console.log('Database connected')
+    console.log('📍 INFO: DB connected')
     server.listen(PORT, () => {
-      console.log('Server is running on port ', PORT)
+      console.log('📍 INFO: Server running | PORT:',PORT)
     })
   })
   .catch((err) => {
