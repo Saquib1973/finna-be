@@ -1,5 +1,6 @@
-import type { UserProps } from '../types.js'
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+import { AUTH_TOKEN_EXPIRY } from '../constants.js';
+import type { UserProps } from '../types.js';
 export const generateToken = (user: UserProps) => {
   const payload = {
     user: {
@@ -10,6 +11,6 @@ export const generateToken = (user: UserProps) => {
     },
   }
   return jwt.sign(payload, process.env.JWT_SECRET as string, {
-    expiresIn: '60s',
+    expiresIn: AUTH_TOKEN_EXPIRY,
   });
 }
