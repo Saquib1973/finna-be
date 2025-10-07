@@ -21,6 +21,9 @@ const UserSchema = new Schema<UserProps>({
     type: String,
     unique: true,
   },
+  bio: {
+    type:String,
+  },
   avatar: {
     type: String,
     default: '',

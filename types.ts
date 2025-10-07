@@ -4,7 +4,8 @@ export interface UserProps extends Document {
   email: string
   password: string
   name?: string
-  username?:string
+  username?: string
+  bio?:string
   avatar?: string
   created?: Date
   otp?: string | undefined
