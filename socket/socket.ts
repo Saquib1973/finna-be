@@ -2,6 +2,8 @@ import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import { Socket, Server as SocketIOServer } from 'socket.io'
 import { registerUserEvents } from './userEvents.js'
+import { registerChatEvents } from './chatEvents.js'
+import Conversation from '../modals/Conversation.js'
 dotenv.config()
 
 export function initSocket(server: any): SocketIOServer {
@@ -32,21 +34,35 @@ export function initSocket(server: any): SocketIOServer {
         next()
       }
     )
+  })
 
-    io.on('connection', (socket: Socket) => {
-      const userId = socket.data.userId
-      console.log(
-        `User connected: ${userId}, username: ${socket.data.username}`
-      )
+  // Move this OUTSIDE the middleware
+  io.on('connection', async (socket: Socket) => {
+    const userId = socket.data.userId
+    console.log(
+      `User connected: ${userId}, username: ${socket.data.username}`
+    )
 
-      //register events
+    //register events
+    registerUserEvents(io, socket)
+    registerChatEvents(io, socket)
 
-      registerUserEvents(io, socket)
-
-      socket.on('disconnect', () => {
-        console.log(`User disconnected: ${userId}`)
+    //join all conversations of user
+    try {
+      const conversations = await Conversation.find({
+        participants: userId,
       })
+      conversations.forEach((conversation) => {
+        socket.join(conversation._id.toString())
+      })
+    } catch (error) {
+      console.error('Error joining conversations:', error)
+    }
+
+    socket.on('disconnect', () => {
+      console.log(`User disconnected: ${userId}`)
     })
   })
+
   return io
 }
