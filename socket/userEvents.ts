@@ -20,7 +20,7 @@ export function registerUserEvents(io: SocketIOServer, socket: Socket) {
     try {
       const updatedUser = await User.findByIdAndUpdate(
         userId,
-        { name: data.name, avatar: data.avatar, bio: data.bio },
+        { name: data.name, avatar: data.avatar, bio: data.bio , username: data.username},
         { new: true }
       )
 
