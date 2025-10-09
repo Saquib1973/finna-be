@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const messageSchema = new mongoose.Schema({
-  conversaionId: {
+  conversationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Conversation",
     required: true
@@ -12,7 +12,8 @@ const messageSchema = new mongoose.Schema({
     required: true
   },
   content: String,
-  attachement:String,
+  attachment:String,
 }, { timestamps: true })
+
 
 export default mongoose.model('Message', messageSchema)

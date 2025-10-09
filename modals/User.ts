@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 import type { UserProps } from '../types.js'
 
-const UserSchema = new Schema<UserProps>({
+const userSchema = new Schema<UserProps>({
   email: {
     type: String,
     required: true,
@@ -15,11 +15,11 @@ const UserSchema = new Schema<UserProps>({
   },
   name: {
     type: String,
-    required: true,
   },
   username: {
     type: String,
     unique: true,
+    sparse: true,
   },
   bio: {
     type:String,
@@ -28,12 +28,16 @@ const UserSchema = new Schema<UserProps>({
     type: String,
     default: '',
   },
-  otp: { type: String },
-  otp_expiry: { type: Date },
+  otp: { type: String,sparse: true },
+  otp_expiry: { type: Date,sparse: true },
   created: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
+    index: true,
   },
 })
 
-export default model<UserProps>('User', UserSchema)
+userSchema.index({ email: 1, created: -1 });
+userSchema.index({ name: 'text', username: 'text',bio:"text",email:"text" })
+
+export default model<UserProps>('User', userSchema)
